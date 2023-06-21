@@ -107,7 +107,7 @@ use jsonrpsee::{
 use reth_ipc::server::IpcServer;
 use reth_network_api::{NetworkInfo, Peers};
 use reth_provider::{
-    BlockProvider, BlockProviderIdExt, CanonStateSubscriptions, EvmEnvProvider,
+    BlockProvider, BlockProviderIdExt, CanonStateSubscriptions, EvmEnvProvider, LogIndexProvider,
     StateProviderFactory,
 };
 use reth_rpc::{
@@ -164,7 +164,13 @@ pub async fn launch<Provider, Pool, Network, Tasks, Events>(
     events: Events,
 ) -> Result<RpcServerHandle, RpcError>
 where
-    Provider: BlockProviderIdExt + StateProviderFactory + EvmEnvProvider + Clone + Unpin + 'static,
+    Provider: BlockProviderIdExt
+        + StateProviderFactory
+        + EvmEnvProvider
+        + LogIndexProvider
+        + Clone
+        + Unpin
+        + 'static,
     Pool: TransactionPool + Clone + 'static,
     Network: NetworkInfo + Peers + Clone + 'static,
     Tasks: TaskSpawner + Clone + 'static,
@@ -263,7 +269,13 @@ impl<Provider, Pool, Network, Tasks, Events>
 impl<Provider, Pool, Network, Tasks, Events>
     RpcModuleBuilder<Provider, Pool, Network, Tasks, Events>
 where
-    Provider: BlockProviderIdExt + StateProviderFactory + EvmEnvProvider + Clone + Unpin + 'static,
+    Provider: BlockProviderIdExt
+        + StateProviderFactory
+        + EvmEnvProvider
+        + LogIndexProvider
+        + Clone
+        + Unpin
+        + 'static,
     Pool: TransactionPool + Clone + 'static,
     Network: NetworkInfo + Peers + Clone + 'static,
     Tasks: TaskSpawner + Clone + 'static,
@@ -480,8 +492,13 @@ impl RpcModuleSelection {
         config: RpcModuleConfig,
     ) -> RpcModule<()>
     where
-        Provider:
-            BlockProviderIdExt + StateProviderFactory + EvmEnvProvider + Clone + Unpin + 'static,
+        Provider: BlockProviderIdExt
+            + StateProviderFactory
+            + EvmEnvProvider
+            + LogIndexProvider
+            + Clone
+            + Unpin
+            + 'static,
         Pool: TransactionPool + Clone + 'static,
         Network: NetworkInfo + Peers + Clone + 'static,
         Tasks: TaskSpawner + Clone + 'static,
@@ -687,7 +704,13 @@ where
 impl<Provider, Pool, Network, Tasks, Events>
     RethModuleRegistry<Provider, Pool, Network, Tasks, Events>
 where
-    Provider: BlockProviderIdExt + StateProviderFactory + EvmEnvProvider + Clone + Unpin + 'static,
+    Provider: BlockProviderIdExt
+        + StateProviderFactory
+        + EvmEnvProvider
+        + LogIndexProvider
+        + Clone
+        + Unpin
+        + 'static,
     Pool: TransactionPool + Clone + 'static,
     Network: NetworkInfo + Peers + Clone + 'static,
     Tasks: TaskSpawner + Clone + 'static,

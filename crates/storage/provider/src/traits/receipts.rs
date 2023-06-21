@@ -3,7 +3,7 @@ use reth_primitives::{BlockHashOrNumber, BlockId, Receipt, TxHash, TxNumber};
 
 use crate::BlockIdProvider;
 
-///  Client trait for fetching [Receipt] data .
+///  Client trait for fetching [Receipt] data.
 #[auto_impl::auto_impl(&, Arc)]
 pub trait ReceiptProvider: Send + Sync {
     /// Get receipt by transaction number

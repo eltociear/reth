@@ -1,9 +1,9 @@
 use crate::{
     BlockHashProvider, BlockIdProvider, BlockNumProvider, BlockProvider, BlockProviderIdExt,
     BlockchainTreePendingStateProvider, CanonChainTracker, CanonStateNotifications,
-    CanonStateSubscriptions, EvmEnvProvider, HeaderProvider, PostStateDataProvider, ProviderError,
-    ReceiptProvider, StageCheckpointReader, StateProviderBox, StateProviderFactory,
-    TransactionsProvider, WithdrawalsProvider,
+    CanonStateSubscriptions, EvmEnvProvider, HeaderProvider, LogIndexProvider,
+    PostStateDataProvider, ProviderError, ReceiptProvider, StageCheckpointReader, StateProviderBox,
+    StateProviderFactory, TransactionsProvider, WithdrawalsProvider,
 };
 use reth_db::{database::Database, models::StoredBlockBodyIndices};
 use reth_interfaces::{
@@ -14,7 +14,7 @@ use reth_interfaces::{
 use reth_primitives::{
     stage::{StageCheckpoint, StageId},
     Address, Block, BlockHash, BlockHashOrNumber, BlockId, BlockNumHash, BlockNumber,
-    BlockNumberOrTag, BlockWithSenders, ChainInfo, Header, Receipt, SealedBlock,
+    BlockNumberOrTag, BlockWithSenders, ChainInfo, Header, IntegerList, Receipt, SealedBlock,
     SealedBlockWithSenders, SealedHeader, TransactionMeta, TransactionSigned,
     TransactionSignedNoHash, TxHash, TxNumber, Withdrawal, H256, U256,
 };
@@ -25,7 +25,7 @@ pub use state::{
 };
 use std::{
     collections::{BTreeMap, HashSet},
-    ops::RangeBounds,
+    ops::{RangeBounds, RangeInclusive},
     time::Instant,
 };
 use tracing::trace;
@@ -128,6 +128,10 @@ where
 
     fn headers_range(&self, range: impl RangeBounds<BlockNumber>) -> Result<Vec<Header>> {
         self.database.provider()?.headers_range(range)
+    }
+
+    fn headers(&self, block_numbers: &[BlockNumber]) -> Result<Vec<Option<Header>>> {
+        self.database.provider()?.headers(block_numbers)
     }
 
     fn sealed_headers_range(
@@ -323,6 +327,28 @@ where
 
     fn receipts_by_block(&self, block: BlockHashOrNumber) -> Result<Option<Vec<Receipt>>> {
         self.database.provider()?.receipts_by_block(block)
+    }
+}
+
+impl<DB, Tree> LogIndexProvider for BlockchainProvider<DB, Tree>
+where
+    DB: Database,
+    Tree: Send + Sync,
+{
+    fn log_address_indices(
+        &self,
+        address: Address,
+        block_range: RangeInclusive<BlockNumber>,
+    ) -> Result<Option<IntegerList>> {
+        self.database.provider()?.log_address_indices(address, block_range)
+    }
+
+    fn log_topic_indices(
+        &self,
+        topic: H256,
+        block_range: RangeInclusive<BlockNumber>,
+    ) -> Result<Option<IntegerList>> {
+        self.database.provider()?.log_topic_indices(topic, block_range)
     }
 }
 

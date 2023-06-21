@@ -5615,6 +5615,7 @@ dependencies = [
  "http",
  "http-body",
  "hyper",
+ "itertools",
  "jsonrpsee",
  "jsonwebtoken",
  "pin-project",
