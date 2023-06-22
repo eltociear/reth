@@ -9,7 +9,7 @@ use reth_db::{
     version::{check_db_version_file, create_db_version_file, DatabaseVersionError},
 };
 use reth_primitives::{stage::StageId, Account, Bytecode, ChainSpec, StorageEntry, H256, U256};
-use reth_provider::{AccountWriter, DatabaseProviderRW, HashingWriter, PostState, ProviderFactory};
+use reth_provider::{DatabaseProviderRW, HashingWriter, PostState, ProviderFactory};
 use std::{fs, path::Path, sync::Arc};
 use tracing::debug;
 
